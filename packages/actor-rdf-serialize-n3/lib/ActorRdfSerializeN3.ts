@@ -1,6 +1,8 @@
-import type { IActionRdfSerialize,
+import type {
+  IActionRdfSerialize,
   IActorRdfSerializeFixedMediaTypesArgs,
-  IActorRdfSerializeOutput } from '@comunica/bus-rdf-serialize';
+  IActorRdfSerializeOutput
+} from '@comunica/bus-rdf-serialize';
 import {
   ActorRdfSerializeFixedMediaTypes,
 } from '@comunica/bus-rdf-serialize';
@@ -33,11 +35,16 @@ export class ActorRdfSerializeN3 extends ActorRdfSerializeFixedMediaTypes {
   }
 
   public async runHandle(action: IActionRdfSerialize, mediaType: string, context: IActionContext):
-  Promise<IActorRdfSerializeOutput> {
-    const data: NodeJS.ReadableStream = <any> new StreamWriter({ format: mediaType }).import(action.quadStream);
-    return { data,
+    Promise<IActorRdfSerializeOutput> {
+    const data: NodeJS.ReadableStream = <any>new StreamWriter({
+      format: mediaType,
+      prefixes: context.get({ name: '@comunica/actor-rdf-serialize-n3:prefixes' }),
+    }).import(action.quadStream);
+    return {
+      data,
       triples: mediaType === 'text/turtle' ||
-      mediaType === 'application/n-triples' ||
-      mediaType === 'text/n3' };
+        mediaType === 'application/n-triples' ||
+        mediaType === 'text/n3',
+    };
   }
 }
